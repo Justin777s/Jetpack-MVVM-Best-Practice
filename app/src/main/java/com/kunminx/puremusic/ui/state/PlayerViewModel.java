@@ -61,6 +61,7 @@ public class PlayerViewModel extends ViewModel {
 
     public final ObservableField<MaterialDrawableBuilder.IconValue> playModeIcon = new ObservableField<>();
 
+    //构造代码块，构造对象时执行一次，用于初始化
     {
         title.set(Utils.getApp().getString(R.string.app_name));
         artist.set(Utils.getApp().getString(R.string.app_name));

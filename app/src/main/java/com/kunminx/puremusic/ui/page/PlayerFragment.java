@@ -22,6 +22,7 @@ import android.widget.SeekBar;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.lifecycle.Observer;
 
 import com.kunminx.architecture.ui.page.BaseFragment;
 import com.kunminx.architecture.ui.page.DataBindingConfig;
@@ -78,21 +79,26 @@ public class PlayerFragment extends BaseFragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        mPageCallback.isToAddSlideListener().observeInFragment(this, aBoolean -> {
-            if (view.getParent().getParent() instanceof SlidingUpPanelLayout) {
-                SlidingUpPanelLayout sliding = (SlidingUpPanelLayout) view.getParent().getParent();
-                sliding.addPanelSlideListener(new PlayerSlideListener((FragmentPlayerBinding) getBinding(), sliding));
-                sliding.addPanelSlideListener(new DefaultInterface.PanelSlideListener() {
-                    @Override
-                    public void onPanelStateChanged(
-                            View view, SlidingUpPanelLayout.PanelState panelState,
-                            SlidingUpPanelLayout.PanelState panelState1) {
-                        DrawerCoordinateHelper.getInstance().requestToUpdateDrawerMode(
-                                panelState1 == SlidingUpPanelLayout.PanelState.EXPANDED,
-                                this.getClass().getSimpleName()
-                        );
-                    }
-                });
+        mPageCallback.isToAddSlideListener().observeInFragment(this, new Observer<Boolean>() {
+            @Override
+            public void onChanged(Boolean aBoolean) {
+
+                if (view.getParent().getParent() instanceof SlidingUpPanelLayout) {
+                    SlidingUpPanelLayout sliding = (SlidingUpPanelLayout) view.getParent().getParent();
+                    sliding.addPanelSlideListener(new PlayerSlideListener((FragmentPlayerBinding) getBinding(), sliding));
+                    sliding.addPanelSlideListener(new DefaultInterface.PanelSlideListener() {
+                        @Override
+                        public void onPanelStateChanged(
+                                View view, SlidingUpPanelLayout.PanelState panelState,
+                                SlidingUpPanelLayout.PanelState panelState1) {
+                            DrawerCoordinateHelper.getInstance().requestToUpdateDrawerMode(
+                                    panelState1 == SlidingUpPanelLayout.PanelState.EXPANDED,
+                                    this.getClass().getSimpleName()
+                            );
+                        }
+                    });
+                }
+
             }
         });
 
